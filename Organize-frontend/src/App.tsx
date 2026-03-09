@@ -1,35 +1,73 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from "react";
+import {
+  getTodos,
+  createTodo,
+  updateTodo,
+  deleteTodo,
+  type Todo,
+} from "./api/todos";
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const [newTitle, setNewTitle] = useState("");
+
+  useEffect(() => {
+    load();
+  }, []);
+
+  async function load() {
+    const items = await getTodos();
+    setTodos(items);
+  }
+
+  async function add() {
+    if (!newTitle.trim()) return;
+    await createTodo(newTitle.trim());
+    setNewTitle("");
+    load();
+  }
+
+  async function toggle(t: Todo) {
+    await updateTodo({ ...t, isCompleted: !t.isCompleted });
+    load();
+  }
+
+  async function remove(id: number) {
+    await deleteTodo(id);
+    load();
+  }
 
   return (
-    <>
+    <div className="App">
+      <h1>My todos</h1>
+
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <input
+          value={newTitle}
+          onChange={(e) => setNewTitle(e.target.value)}
+          placeholder="Add todo…"
+        />
+        <button onClick={add}>Add</button>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+
+      <ul>
+        {todos.map((t) => (
+          <li key={t.id}>
+            <label>
+              <input
+                type="checkbox"
+                checked={t.isCompleted}
+                onChange={() => toggle(t)}
+              />
+              {t.title}
+            </label>
+            <button onClick={() => remove(t.id)}>✕</button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }
 
-export default App
+export default App;

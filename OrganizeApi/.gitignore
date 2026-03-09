@@ -1,0 +1,63 @@
+# Build artifacts
+bin/
+obj/
+
+# Visual Studio files
+*.user
+*.suo
+*.ntvs_analysis.dat
+*.njsproj
+*.vcxproj.user
+
+# Rider
+.idea/
+*.sln.iml
+
+# VS Code
+.vscode/
+
+# NuGet
+*.nupkg
+# The packages folder can be ignored because of Package Restore
+**/packages/*
+!**/packages/build/**/*
+
+# Dotnet publish
+publish/
+
+# SQLite database
+*.db
+
+# Other
+*.log
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# IIS Express
+/.vs/
+
+# Entity Framework
+Migrations/*.cs
+
+# Certificate files
+*.pfx
+
+# prevent checking in local development secrets
+secrets.*
+
+# macOS
+.DS_Store
+
+# Linux
+*~
+
+# Windows thumbnail cache
+Thumbs.db

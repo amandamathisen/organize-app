@@ -29,4 +29,35 @@ public class TodosController : ControllerBase
         await _context.SaveChangesAsync();
         return CreatedAtAction(nameof(Get), new { id = todo.Id }, todo);
     }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(int id, ToDo updated){
+        if (id != updated.Id){
+            return BadRequest();
+        }
+
+        var existing = await _context.Todos.FindAsync(id);
+        if (existing == null){
+            return NotFound();
+        }
+
+        existing.Title = updated.Title;
+        existing.IsCompleted = updated.IsCompleted;
+
+        await _context.SaveChangesAsync();
+        return NoContent();
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id){
+        var todo = await _context.Todos.FindAsync(id);
+
+        if(todo == null){
+            return NotFound();
+        }
+
+        _context.Todos.Remove(todo);
+        await _context.SaveChangesAsync();
+        return NoContent();
+    }
 }
